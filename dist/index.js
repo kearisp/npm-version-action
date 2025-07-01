@@ -27540,47 +27540,67 @@ module.exports = {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __importDefault(__nccwpck_require__(7484));
+const core = __importStar(__nccwpck_require__(7484));
 const run_1 = __nccwpck_require__(9786);
 (0, run_1.run)().catch((err) => {
-    core_1.default.setFailed(err.message || "Some error");
+    core.setFailed(err.message || "Some error");
 });
 
 
 /***/ }),
 
 /***/ 8066:
-/***/ (function(__unused_webpack_module, exports) {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Npm = void 0;
 class Npm {
+    registryUrl;
     constructor(registryUrl) {
         this.registryUrl = registryUrl;
     }
-    getPackageInfo(name) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const res = yield fetch(`${this.registryUrl}/${name}`);
-            if (res.status !== 200) {
-                throw new Error("Failed to fetch package info from the registry");
-            }
-            return res.json();
-        });
+    async getPackageInfo(name) {
+        const res = await fetch(`${this.registryUrl}/${name}`);
+        if (res.status !== 200) {
+            throw new Error("Failed to fetch package info from the registry");
+        }
+        return res.json();
     }
 }
 exports.Npm = Npm;
@@ -27593,27 +27613,51 @@ exports.Npm = Npm;
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
-const core_1 = __importDefault(__nccwpck_require__(7484));
+const core = __importStar(__nccwpck_require__(7484));
 const fs_1 = __importDefault(__nccwpck_require__(9896));
 const jsonc_parser_1 = __nccwpck_require__(9547);
 const Npm_1 = __nccwpck_require__(8066);
 const utils_1 = __nccwpck_require__(8541);
-const run = () => __awaiter(void 0, void 0, void 0, function* () {
-    const tag = core_1.default.getInput("tag"), registryUrl = core_1.default.getInput("registry-url");
+const run = async () => {
+    const tag = core.getInput("tag"), registryUrl = core.getInput("registry-url");
     if (!tag) {
         throw new Error("Tag not provided");
     }
@@ -27625,7 +27669,7 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     if (!packageData.version) {
         throw new Error("Version field is missing in package.json");
     }
-    const npm = new Npm_1.Npm(registryUrl), info = yield npm.getPackageInfo(packageData.name);
+    const npm = new Npm_1.Npm(registryUrl), info = await npm.getPackageInfo(packageData.name);
     const lastIndex = Object.keys(info.versions).reduce((index, version) => {
         const regExp = new RegExp(`^${(0, utils_1.escapeRegExp)(packageData.version)}-${tag}\.(\\d+)$`);
         if (regExp.test(version)) {
@@ -27637,8 +27681,8 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     const newVersion = `${packageData.version}-${tag}.${lastIndex + 1}`;
     packageContent = (0, jsonc_parser_1.applyEdits)(packageContent, (0, jsonc_parser_1.modify)(packageContent, ["version"], newVersion, {}));
     fs_1.default.writeFileSync("package.json", packageContent);
-    core_1.default.info(`NPM version changed: ${packageData.version} -> ${newVersion}.`);
-});
+    core.info(`NPM version changed: ${packageData.version} -> ${newVersion}.`);
+};
 exports.run = run;
 
 
