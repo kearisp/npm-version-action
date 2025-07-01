@@ -1,0 +1,14 @@
+name: 'Setup NPM Version'
+description: 'Sets up package version with tag and auto-incremented index'
+author: 'Kris Papercut'
+inputs:
+    tag:
+        required: true
+        description: 'The tag of your package for increment'
+    registry-url:
+        description: 'Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file, and set up auth to read in from env.NODE_AUTH_TOKEN.'
+        default: 'https://registry.npmjs.org'
+
+runs:
+    using: node20
+    main: './dist/index.js'

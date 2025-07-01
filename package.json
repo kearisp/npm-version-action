@@ -1,0 +1,30 @@
+{
+    "name": "setup-npm-version-action",
+    "version": "0.0.1",
+    "author": "Kris Papercut <krispcut@gmail.com>",
+    "description": "Sets up package version with tag and auto-incremented index",
+    "license": "MIT",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc",
+        "postbuild": "ncc build -o dist src/index.ts",
+        "test": "jest",
+        "test-watch": "jest --watchAll"
+    },
+    "dependencies": {
+        "@actions/core": "^1.11.1",
+        "@actions/exec": "^1.1.1",
+        "fs": "^0.0.1-security",
+        "jsonc-parser": "^3.3.1"
+    },
+    "devDependencies": {
+        "@types/jest": "^29.5.14",
+        "@types/node": "^22.15.17",
+        "@vercel/ncc": "^0.38.3",
+        "jest": "^29.7.0",
+        "memfs": "^4.17.1",
+        "ts-jest": "^29.3.2",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    }
+}
