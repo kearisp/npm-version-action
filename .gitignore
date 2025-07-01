@@ -7,6 +7,9 @@
 # Build configs
 /.env
 
+# Builds
+/lib
+
 # Dependency directories
 /node_modules
 
