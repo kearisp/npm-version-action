@@ -1,8 +1,7 @@
-import {describe, it, expect, beforeEach, afterEach, jest} from "@jest/globals";
-import core from "@actions/core";
+import {describe, it, vi, expect, beforeEach, afterEach, vitest} from "vitest";
+import * as core from "@actions/core";
 import {vol} from "memfs";
-import {run} from "./run";
-import {setInputs} from "../test/inputs";
+import {run} from "./run.js";
 
 
 describe("run", (): void => {
@@ -15,7 +14,7 @@ describe("run", (): void => {
             }, {} as any)
         };
 
-        jest.spyOn(global, "fetch")
+        vitest.spyOn(global, "fetch")
             .mockImplementation(async () => {
                 return {
                     ok: true,
@@ -29,12 +28,12 @@ describe("run", (): void => {
     };
 
     beforeEach((): void => {
-        jest.spyOn(core, "info")
+        vitest.spyOn(core, "info")
             .mockImplementation(() => undefined);
     });
 
     afterEach((): void => {
-        jest.resetAllMocks();
+        vitest.resetAllMocks();
         vol.reset();
     });
 
@@ -73,9 +72,7 @@ describe("run", (): void => {
             }, null, 4)
         }, process.cwd());
 
-        setInputs({
-            tag
-        });
+        vi.stubEnv("INPUT_TAG", tag);
 
         await expect(run()).resolves.toBeUndefined();
 
@@ -94,9 +91,7 @@ describe("run", (): void => {
             }, null, 4)
         }, process.cwd());
 
-        setInputs({
-            tag: "beta"
-        });
+        vi.stubEnv("INPUT_TAG", "beta");
 
         await run();
 
@@ -104,11 +99,9 @@ describe("run", (): void => {
     });
 
     it("should throw error if package.json is missing", async () => {
-        setInputs({
-            tag: "beta"
-        });
+        vi.stubEnv("INPUT_TAG", "beta");
 
-        await expect(run()).rejects.toThrowError("File package.json is missing");
+        await expect(run()).rejects.toThrow("File package.json is missing");
     });
 
     it("should throw an error if version is missing in package.json", async () => {
@@ -118,15 +111,13 @@ describe("run", (): void => {
             }, null, 4)
         }, process.cwd());
 
-        setInputs({
-            tag: "beta"
-        });
+        vi.stubEnv("INPUT_TAG", "beta");
 
-        await expect(run()).rejects.toThrowError();
+        await expect(run()).rejects.toThrow();
     });
 
     it("should throw error if registry response is not OK", async () => {
-        jest.spyOn(global, "fetch").mockImplementation(async () => ({
+        vitest.spyOn(global, "fetch").mockImplementation(async () => ({
             ok: false,
             status: 500,
             json: async () => ({})
@@ -139,10 +130,8 @@ describe("run", (): void => {
             }, null, 4)
         }, process.cwd());
 
-        setInputs({
-            tag: "beta"
-        });
+        vi.stubEnv("INPUT_TAG", "beta");
 
-        await expect(run()).rejects.toThrowError("Failed to fetch package info from the registry");
+        await expect(run()).rejects.toThrow("Failed to fetch package info from the registry");
     });
 });

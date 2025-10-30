@@ -12,7 +12,7 @@ candidates.
 ```yaml
 steps:
   - name: Setup beta version
-    uses: kearisp/npm-version-action@v0
+    uses: kearisp/npm-version-action@v0.0.2
     with:
         tag: beta
 ```

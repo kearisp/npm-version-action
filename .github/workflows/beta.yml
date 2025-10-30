@@ -1,0 +1,80 @@
+name: Beta
+on:
+    pull_request:
+        types:
+          - opened
+          - reopened
+          - synchronize
+        paths:
+          - src
+          - package.json
+          - tsconfig.json
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v5
+
+          - name: Setup Node.js
+            uses: actions/setup-node@v5
+            with:
+                node-version: 24
+                registry-url: 'https://registry.npmjs.org'
+
+          - name: Cache dependencies
+            uses: actions/cache@v4
+            with:
+                path: ~/.npm
+                key: ${{ runner.os }}-npm-${{ hashFiles('**/package.json') }}
+                restore-keys: |
+                    ${{ runner.os }}-npm-
+
+          - name: Install dependencies
+            shell: bash
+            run: npm install
+
+          - name: Test
+            shell: bash
+            run: npm run test
+
+          - name: Build
+            shell: bash
+            run: npm run build
+
+          - name: Upload build
+            uses: actions/upload-artifact@v5
+            with:
+                name: "dist"
+                path: ./dist
+
+    tag:
+        name: Tag
+        needs:
+          - build
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v5
+            with:
+                ref: "release"
+
+          - name: Download build
+            uses: actions/download-artifact@v5
+            with:
+                name: "dist"
+
+          - name: Create tag
+            env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            shell: bash
+            run: |
+                git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+                git add .
+                git commit --allow-empty --message "Pre-release beta at ${GITHUB_SHA}"
+                git tag -d beta || true
+                git tag -a beta -m "Pre-release beta"
+                git push origin release
+                git push origin beta --force
+
