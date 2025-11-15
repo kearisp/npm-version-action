@@ -78,7 +78,7 @@ jobs:
                 echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
                 cat <<EOF > ~/gpg.sh
                 #!/usr/bin/env bash
-                gpg --passphrase "${{ secrets.GPG_PASSPHRASE }}" "$@" <&0
+                gpg --yes --batch --passphrase "${{ secrets.GPG_PASSPHRASE }}" $@ <&0
                 EOF
                 chmod +x ~/gpg.sh
                 git config --global gpg.program ~/gpg.sh
