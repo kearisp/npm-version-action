@@ -67,20 +67,30 @@ jobs:
             with:
                 name: "dist"
 
+          - name: Setup gpg
+            shell: bash
+            run: |
+                gpg --batch --import <<< "${{ secrets.GPG_PRIVATE_KEY }}"
+                gpg --list-secret-keys --keyid-format LONG
+                git config --global user.signingkey ${{ vars.GPG_ID }}
+                echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+#                cat <<EOF > ~/gpg.sh
+#                #!/usr/bin/env bash
+#                gpg --passphrase "${{ secrets.GPG_PASSPHRASE }}" $@
+#                EOF
+#                chmod +x ~/gpg.sh
+#                git config --global gpg.program ~/gpg.sh
+
           - name: Create tag
             env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
             shell: bash
             run: |
-                gpg --batch --import <<< "${{ secrets.GPG_PRIVATE_KEY }}"
-                gpg --list-secret-keys --keyid-format LONG
-                echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+                export GPG_TTY=$(tty)
                 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
                 git config commit.gpgsign true
                 git config tag.gpgsign true
-                git config --global gpg.passphrase "${{ secrets.GPG_PASSPHRASE }}"
-                git config --global user.signingkey ${{ vars.GPG_ID }}
                 git config --global user.name "Kris Papercut"
                 git config --global user.email "krispcut@gmail.com"
                 git add .
