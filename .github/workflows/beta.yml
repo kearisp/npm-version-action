@@ -73,16 +73,17 @@ jobs:
             shell: bash
             run: |
                 gpg --batch --import <<< "${{ secrets.GPG_PRIVATE_KEY }}"
+                gpg --list-secret-keys --keyid-format LONG
+                echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
                 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
                 git config commit.gpgsign true
                 git config tag.gpgsign true
+                git config --global gpg.passphrase "${{ secrets.GPG_PASSPHRASE }}"
                 git config --global user.signingkey ${{ vars.GPG_ID }}
                 git config --global user.name "Kris Papercut"
                 git config --global user.email "krispcut@gmail.com"
                 git add .
-                git \
-                    -c gpg.program="gpg --batch --yes --pinentry-mode loopback --passphrase '${{ secrets.GPG_PASSPHRASE }}'" \
-                    commit --allow-empty -S -m "Signed commit"
+                git commit --allow-empty -S -m "Signed commit"
                 git tag -fa beta -m "Pre-release beta"
                 git push origin release
                 git push origin beta --force
