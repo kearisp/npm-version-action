@@ -74,7 +74,12 @@ jobs:
             run: |
                 gpg --batch --import <<< "${{ secrets.GPG_PRIVATE_KEY }}"
                 echo -e "${{ secrets.GPG_PASSPHRASE }}\n\n" | \
-                    gpg --change-passphrase --batch --pinentry-mode loopback ${{ vars.GPG_ID }}
+                    gpg \
+                        --change-passphrase \
+                        --batch \
+                        --pinentry-mode \
+                        --passphrase "${{ secrets.GPG_PASSPHRASE }}"
+                        loopback ${{ vars.GPG_ID }}
                 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
                 git config commit.gpgsign true
                 git config tag.gpgsign true
