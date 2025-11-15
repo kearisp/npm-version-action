@@ -75,8 +75,7 @@ jobs:
                 git config --global user.name "Kris Papercut"
                 git add .
                 git commit --allow-empty --message "Pre-release beta at ${GITHUB_SHA}"
-                git tag -d beta || true
-                git tag -a beta -m "Pre-release beta"
+                git tag -fa beta -m "Pre-release beta"
                 git push origin release
                 git push origin beta --force
 
