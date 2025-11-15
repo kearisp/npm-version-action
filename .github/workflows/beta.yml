@@ -70,6 +70,7 @@ jobs:
           - name: Create tag
             env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
             shell: bash
             run: |
                 gpg --batch --import <<< "${{ secrets.GPG_PRIVATE_KEY }}"
