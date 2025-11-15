@@ -72,11 +72,17 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             shell: bash
             run: |
+                gpg --batch --import <<< "${{ secrets.GPG_PRIVATE_KEY }}"
+                echo -e "${{ secrets.GPG_PASSPHRASE }}\n\n" | \
+                    gpg --change-passphrase --batch --pinentry-mode loopback ${{ vars.GPG_ID }}
                 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
-                git config --global user.email "krispcut@gmail.com"
+                git config commit.gpgsign true
+                git config tag.gpgsign true
+                git config --global user.signingkey ${{ vars.GPG_ID }}
                 git config --global user.name "Kris Papercut"
+                git config --global user.email "krispcut@gmail.com"
                 git add .
-                git commit --allow-empty --message "Pre-release beta at ${GITHUB_SHA}"
+                git commit --allow-empty --message "Pre-release beta"
                 git tag -fa beta -m "Pre-release beta"
                 git push origin release
                 git push origin beta --force
