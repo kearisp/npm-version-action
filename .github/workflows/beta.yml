@@ -70,7 +70,9 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             shell: bash
             run: |
-                git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+                git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+                git config --global user.email "krispcut@gmail.com"
+                git config --global user.name "Kris Papercut"
                 git add .
                 git commit --allow-empty --message "Pre-release beta at ${GITHUB_SHA}"
                 git tag -d beta || true
