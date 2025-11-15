@@ -74,12 +74,12 @@ jobs:
                 gpg --list-secret-keys --keyid-format LONG
                 git config --global user.signingkey ${{ vars.GPG_ID }}
                 echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-#                cat <<EOF > ~/gpg.sh
-#                #!/usr/bin/env bash
-#                gpg --passphrase "${{ secrets.GPG_PASSPHRASE }}" $@
-#                EOF
-#                chmod +x ~/gpg.sh
-#                git config --global gpg.program ~/gpg.sh
+                cat <<EOF > ~/gpg.sh
+                #!/usr/bin/env bash
+                gpg --passphrase "${{ secrets.GPG_PASSPHRASE }}" $@
+                EOF
+                chmod +x ~/gpg.sh
+                git config --global gpg.program ~/gpg.sh
 
           - name: Create tag
             env:
@@ -87,7 +87,6 @@ jobs:
                 GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
             shell: bash
             run: |
-                export GPG_TTY=$(tty)
                 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
                 git config commit.gpgsign true
                 git config tag.gpgsign true
