@@ -80,7 +80,8 @@ jobs:
                 git config --global user.name "Kris Papercut"
                 git config --global user.email "krispcut@gmail.com"
                 git add .
-                git commit --allow-empty --message "Pre-release beta"
+                git -c gpg.program="gpg --batch --yes --pinentry-mode loopback --passphrase '${{ secrets.GPG_PASSPHRASE }}'" commit -S -m "Signed commit"
+#                git commit --allow-empty --message "Pre-release beta"
                 git tag -fa beta -m "Pre-release beta"
                 git push origin release
                 git push origin beta --force
