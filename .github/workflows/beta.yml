@@ -79,6 +79,7 @@ jobs:
                 chmod 700 ~/.gnupg
                 echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
                 echo "allow-preset-passphrase" >> ~/.gnupg/gpg-agent.conf
+                gpg-connect-agent reloadagent /bye
                 echo "$GPG_PASSPHRASE" | /usr/lib/gnupg/gpg-preset-passphrase --preset ${{ vars.GPG_ID }}
                 git config --global gpg.program ~/gpg.sh
                 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
