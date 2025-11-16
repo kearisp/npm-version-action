@@ -82,7 +82,11 @@ jobs:
                 echo "no-tty" >> ~/.gnupg/gpg.conf
                 echo "allow-preset-passphrase" >> ~/.gnupg/gpg-agent.conf
                 gpg-connect-agent reloadagent /bye
-                echo "$GPG_PASSPHRASE" | /usr/lib/gnupg/gpg-preset-passphrase --preset ${{ vars.GPG_ID }}
+                KEYGRIP=$(gpg-connect-agent -q 'keyinfo --list' /bye | awk '/KEYINFO/ { print $3 }')
+                for k in $KEYGRIP
+                do
+                    echo "$GPG_PASSPHRASE"  | /usr/lib/gnupg/gpg-preset-passphrase --preset $k
+                done
                 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
                 git config commit.gpgsign true
                 git config tag.gpgsign true
