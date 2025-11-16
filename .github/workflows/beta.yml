@@ -75,11 +75,15 @@ jobs:
             run: |
                 gpg --batch --import <<< "${{ secrets.GPG_PRIVATE_KEY }}"
                 git config --global user.signingkey ${{ vars.GPG_ID }}
-                cat <<EOF > ~/gpg.sh
-                #!/usr/bin/env bash
-                gpg --yes --batch --passphrase "${{ secrets.GPG_PASSPHRASE }}" $@ <&0
+                mkdir -p ~/.gnupg
+                chmod 700 ~/.gnupg
+                echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+                cat <<EOF > ~/.gnupg/gpg-agent.conf
+                default-cache-ttl 21600
+                max-cache-ttl 31536000
+                allow-preset-passphrase
                 EOF
-                chmod +x ~/gpg.sh
+                echo "$GPG_PASSPHRASE" | /usr/lib/gnupg/gpg-preset-passphrase --preset ${{ vars.GPG_ID }}
                 git config --global gpg.program ~/gpg.sh
                 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
                 git config commit.gpgsign true
@@ -91,4 +95,4 @@ jobs:
                 git tag -fa beta -m "Pre-release beta"
                 git push origin release
                 git push origin beta --force
-
+                
