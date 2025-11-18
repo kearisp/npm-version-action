@@ -1,0 +1,40 @@
+name: "Setup GPG"
+description: "Setup GPG"
+inputs:
+    id:
+        required: true
+        description: ""
+    private-key:
+        required: true
+        description: ""
+    passphrase:
+        required: false
+        description: ""
+runs:
+    using: "composite"
+    steps:
+      - name: Setup GPG
+        env:
+            GPG_ID: ${{ inputs.id }}
+            GPG_PRIVATE_KEY: ${{ inputs.private-key }}
+            GPG_PASSPHRASE: ${{ inputs.passphrase }}
+        shell: bash
+        run: |
+            gpg --batch --import <<< "$GPG_PRIVATE_KEY"
+            mkdir -p ~/.gnupg
+            chmod 700 ~/.gnupg
+            echo "batch" >> ~/.gnupg/gpg.conf
+            echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+            echo "no-tty" >> ~/.gnupg/gpg.conf
+            if [[ -n "$GPG_PASSPHRASE" ]]; then
+                echo "allow-preset-passphrase" >> ~/.gnupg/gpg-agent.conf
+                gpg-connect-agent reloadagent /bye
+                KEYGRIP=$(gpg-connect-agent -q 'keyinfo --list' /bye | awk '/KEYINFO/ { print $3 }')
+                for k in $KEYGRIP
+                do
+                    echo "$GPG_PASSPHRASE" | /usr/lib/gnupg/gpg-preset-passphrase --preset $k
+                done
+            fi
+            git config --global user.signingkey $GPG_ID
+            git config commit.gpgsign true
+            git config tag.gpgsign true

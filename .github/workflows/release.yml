@@ -1,20 +1,16 @@
-name: "Beta"
+name: "Release"
+
 on:
-    pull_request:
-        types:
-          - opened
-          - reopened
-          - synchronize
-        paths:
-          - src
-          - package.json
-          - tsconfig.json
+    push:
+        branches:
+          - master
+
 jobs:
     build:
         name: Build
         runs-on: ubuntu-latest
         steps:
-          - name: Checkout code
+          - name: Checkout repo
             uses: actions/checkout@v5
 
           - name: Setup Node.js
@@ -31,7 +27,7 @@ jobs:
                 restore-keys: |
                     ${{ runner.os }}-npm-
 
-          - name: Install dependencies
+          - name: Install Dependencies
             shell: bash
             run: npm install
 
@@ -48,7 +44,6 @@ jobs:
             with:
                 name: "dist"
                 path: ./dist
-
     tag:
         name: Tag
         runs-on: ubuntu-latest
@@ -59,11 +54,6 @@ jobs:
         steps:
           - name: Checkout code
             uses: actions/checkout@v5
-
-          - name: Setup Node.js
-            uses: actions/setup-node@v5
-            with:
-                node-version: 24
 
           - name: Versions
             shell: bash
@@ -78,7 +68,7 @@ jobs:
           - name: Setup GPG
             uses: ./.github/actions/setup-git-gpg
             with:
-                id: ${{ vars.GPG_ID }}
+                id: ${{ secrets.GPG_ID }}
                 private-key: ${{ secrets.GPG_PRIVATE_KEY }}
                 passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
@@ -98,20 +88,23 @@ jobs:
                 name: "dist"
 
           - name: Create tag
+            env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             shell: bash
             run: |
-                TAG_VERSION="beta"
-                MAJOR_VERSION="v${{ env.MAJOR }}-beta"
-                FULL_VERSION="v${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}-beta"
+                TAG_VERSION="latest"
+                MAJOR_VERSION="v${{ env.MAJOR }}"
+                FULL_VERSION="v${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}"
                 git add .
-                git commit --allow-empty -S -m "Pre-release $FULL_VERSION"
+                git commit --allow-empty -S -m "Release latest"
                 git tag -d $TAG_VERSION || true
                 git tag -d $MAJOR_VERSION || true
                 git tag -d $FULL_VERSION || true
-                git tag -sf $TAG_VERSION -m "Pre-release $FULL_VERSION"
-                git tag -sf $MAJOR_VERSION -m "Pre-release $FULL_VERSION"
-                git tag -sf $FULL_VERSION -m "Pre-release $FULL_VERSION"
+                git tag -sf $TAG_VERSION -m "Release $FULL_VERSION"
+                git tag -sf $MAJOR_VERSION -m "Release $FULL_VERSION"
+                git tag -sf $FULL_VERSION -m "Release $FULL_VERSION"
                 git push origin release
                 git push origin $TAG_VERSION --force
                 git push origin $MAJOR_VERSION --force
                 git push origin $FULL_VERSION --force
+
