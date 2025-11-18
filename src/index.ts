@@ -1,7 +1,11 @@
 import * as core from "@actions/core";
-import {run} from "./run";
+import {run} from "./run.js";
 
 
-run().catch((err) => {
-    core.setFailed(err.message || "Some error");
-});
+try {
+    await run();
+}
+catch(err) {
+    core.setFailed((err as Error).message || "Some error");
+    process.exit(1);
+}

@@ -1,0 +1,17 @@
+name: "Setup git"
+description: "Setup git"
+inputs:
+    GITHUB_TOKEN:
+        required: true
+        description: ""
+runs:
+    using: "composite"
+    steps:
+      - name: Setup git
+        env:
+            GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+            git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+            git config --global user.name "Kris Papercut"
+            git config --global user.email "krispcut@gmail.com"

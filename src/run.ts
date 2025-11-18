@@ -1,8 +1,8 @@
 import * as core from "@actions/core";
 import fs from "fs";
 import {applyEdits, modify} from "jsonc-parser";
-import {Npm} from "./makes/Npm";
-import {escapeRegExp} from "./utils";
+import {escapeRegExp} from "./utils/index.js";
+import {getVersions} from "./utils/getVersions.js";
 
 
 export const run = async (): Promise<void> => {
@@ -25,10 +25,9 @@ export const run = async (): Promise<void> => {
         throw new Error("Version field is missing in package.json");
     }
 
-    const npm = new Npm(registryUrl),
-          info = await npm.getPackageInfo(packageData.name);
+    const versions = await getVersions(registryUrl, packageData.name);
 
-    const lastIndex = Object.keys(info.versions).reduce((index, version) => {
+    const lastIndex = Object.keys(versions).reduce((index, version) => {
         const regExp = new RegExp(`^${escapeRegExp(packageData.version)}-${tag}\.(\\d+)$`);
 
         if(regExp.test(version)) {
