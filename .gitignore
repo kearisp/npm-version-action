@@ -6,6 +6,7 @@
 
 # Build configs
 /.env
+/package-lock.json
 
 # Builds
 /lib

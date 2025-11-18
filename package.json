@@ -1,6 +1,6 @@
 {
-    "name": "setup-npm-version-action",
-    "version": "0.0.2",
+    "name": "@kearisp/setup-npm-version-action",
+    "version": "0.0.3",
     "type": "module",
     "author": "Kris Papercut <krispcut@gmail.com>",
     "description": "Sets up package version with tag and auto-incremented index",

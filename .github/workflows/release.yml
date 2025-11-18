@@ -68,7 +68,7 @@ jobs:
           - name: Setup GPG
             uses: ./.github/actions/setup-git-gpg
             with:
-                id: ${{ secrets.GPG_ID }}
+                id: ${{ vars.GPG_ID }}
                 private-key: ${{ secrets.GPG_PRIVATE_KEY }}
                 passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
