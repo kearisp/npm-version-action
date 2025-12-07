@@ -1,6 +1,6 @@
 # kearisp/npm-version-action
 
-[![Version](https://img.shields.io/badge/version-0.0.1-blue.svg)](https://github.com/kearisp/npm-version-action)
+[![Version](https://img.shields.io/badge/version-0.0.3-blue.svg)](https://github.com/kearisp/npm-version-action)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
 ### Usage
@@ -12,7 +12,7 @@ candidates.
 ```yaml
 steps:
   - name: Setup beta version
-    uses: kearisp/npm-version-action@v0.0.2
+    uses: kearisp/npm-version-action@v0.0.3
     with:
         tag: beta
 ```
